@@ -27,15 +27,21 @@ loadmem(char *fname)
 }
 
 void
-ctlwrite(Req *r)
+ctlfswrite(Req *r)
 {
 	char *cmd;
+	char *fields[20];
 	int n;
 
-	cmd = r->ifcall.data;
-	n = r->ofcall.count = r->ifcall.count;
-	if(strncmp(cmd, "halt", strlen("halt")) == 0)
+	r->ofcall.count = r->ifcall.count;
+	cmd = malloc(r->ifcall.count+1);
+	memcpy(cmd, r->ifcall.data, r->ifcall.count);
+	cmd[r->ifcall.count] = '\0';
+
+	n = tokenize(cmd, fields, 20);
+	if(n > 0 && strcmp(cmd, "halt") == 0)
 		running = 0;
+	free(cmd);
 }
 
 void
@@ -89,7 +95,7 @@ threadmain(int argc, char *argv[])
 	if(argc != 0)
 		usage();
 
-	dirtab[Qctl].write = ctlwrite;
+	dirtab[Qctl].write = ctlfswrite;
 
 	pipe(fd);
 	dirtab[Qcon].fd = fd[0];
