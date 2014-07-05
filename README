@@ -1,12 +1,14 @@
 Readme for PDP911
 ==============================
 
-PDP911 emulates a PDP-11/40 with a KW11-L line clock, a
-RK11 disk controller and a KL11 serial console.  It expects 3 rk disks
-named disk[012].rk in the current directory and will try to boot from
-the first (see main.c:/^threadmain).  It posts the serial console as a
-file descriptor to /srv/pdp11 that you can attach to with
-	con -rl /srv/pdp11
+PDP911 emulates a PDP-11/40 with a KW11-L line clock, a RK11 disk
+controller and a KL11 serial console.  It expects 3 rk disks named
+disk[012].rk in the current directory and will try to boot from the
+first (see main.c:/^threadmain).  It serves a file system (/srv/pdp11
+by default) and mounts it (to /mnt/pdp11 by default).  Attach to the
+serial console with
+	con -r /mnt/pdp11/con
+and halt the emulation by writing "halt" to /mnt/pdp11/ctl
 
 There is still much stuff to be implemented and probably quite a few
 bugs.

@@ -3,6 +3,7 @@
 TARG=pdp11
 OFILES=\
 	main.$O\
+	fs.$O\
 	cpu.$O\
 	mem.$O\
 	kl.$O\

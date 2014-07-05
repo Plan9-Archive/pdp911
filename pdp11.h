@@ -1,6 +1,8 @@
 #include <u.h>
 #include <libc.h>
+#include <fcall.h>
 #include <thread.h>
+#include <9p.h>
 #include <ctype.h>
 #include <bio.h>
 
@@ -11,7 +13,8 @@ typedef signed short sword;
 typedef u8int byte;
 typedef u16int word;
 
-extern int cons;
+/* Pipes */
+extern int ctl, cons;
 
 /*
  * CPU
@@ -140,3 +143,33 @@ void rkreset(void);
 void rkattach(int n, char *file);
 void rkdetach(int n);
 void rkboot(int unit);
+
+/*
+ * File system
+ */
+
+enum
+{
+	Qdir,
+	Qctl,
+	Qcon,
+	Qstatus,
+
+	QMAX
+};
+
+typedef struct Dirtab Dirtab;
+struct Dirtab
+{
+	char    *name;
+	uvlong  path;
+	uchar   type;
+	uint    mode;
+	int     fd;
+	void	(*read)(Req *r);
+	void	(*write)(Req *r);
+};
+
+extern Dirtab dirtab[];
+
+void startfilesys(char *mnt, char *srv);
