@@ -177,6 +177,18 @@ writecpu(u32int addr, word val, int type)
 }
 
 void
+statusfsread(Req *rq)
+{
+	char *s;
+
+	savesp();
+	s = smprint("%06o %06o %06o %06o %06o %06o %06o %06o %06o %06o",
+		r[0], r[1], r[2], r[3], r[4], r[5], ksp, usp, r[7], psw);
+	readbuf(rq, s, strlen(s));
+	free(s);
+}
+
+void
 initcpu(void)
 {
 	int i;
@@ -190,6 +202,8 @@ initcpu(void)
 	ioreadtbl[ADDRTOIDX(0777570)] = readcpu;
 	iowritetbl[ADDRTOIDX(0777776)] = writecpu;
 	iowritetbl[ADDRTOIDX(0777570)] = writecpu;
+
+	dirtab[Qstatus].read = statusfsread;
 }
 
 u32int

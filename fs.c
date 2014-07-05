@@ -123,7 +123,6 @@ readproc(Req *r)
 	dt = &dirtab[r->fid->qid.path];
 	n = read(dt->fd, r->ofcall.data, r->ifcall.count);
 	if(n < 0){
-//		print("interrupted read %d\n", r->tag);
 		respond(r, "interrupted");
 	}else{
 		r->ofcall.count = n;
